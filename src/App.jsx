@@ -6,26 +6,30 @@ import CartIndicator from './components/CartIndicator'
 import BookStore from './components/BookStore'
 import Cart from './components/Cart'
 import Footer from './components/Footer'
+import store from './redux/store' // il risultato di configureStore
+import { Provider } from 'react-redux'
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Container className="epizon-container">
-        <Row>
-          <Col className="text-center background-div">
-            <Link to="/">
-              <h1>Epizon Book Store</h1>
-            </Link>
-          </Col>
-          <CartIndicator />
-        </Row>
-        <Routes>
-          <Route path="/" element={<BookStore />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-        <Footer />
-      </Container>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Container className="epizon-container">
+          <Row>
+            <Col className="text-center background-div">
+              <Link to="/">
+                <h1>Epizon Book Store</h1>
+              </Link>
+            </Col>
+            <CartIndicator />
+          </Row>
+          <Routes>
+            <Route path="/" element={<BookStore />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+          <Footer />
+        </Container>
+      </BrowserRouter>
+    </Provider>
   )
 }
 
