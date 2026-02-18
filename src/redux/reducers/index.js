@@ -23,8 +23,58 @@ const initialState = {
 const mainReducer = (currentState = initialState, action) => {
   // è sulla base dell'action.type che il reducer sceglie COME costruire il nuovo stato
   switch (action.type) {
-    // case pizza
-    // case carrello
+    // ora che dispatcho una action "ADD_TO_CART", se voglio che produca un risultato devo
+    // istruire il reducer a gestirla!
+    case 'ADD_TO_CART':
+      // qui ritorniamo il NUOVO stato dell'app quando intercetto una action di questo tipo
+      return {
+        // RICORDA! i metodi MUTATIVI degli array (push, pop, shift, unshift, splice etc.)
+        // sono ILLEGALI in un reducer, perchè vanno a MODIFICARE IN-PLACE l'array di partenza
+        // -> modifichiamo currentState -> modifichiamo i parametri della pure function -> ERRORE
+
+        // l'oggetto che adesso ritorneremo dovrà avere tutti i valori dell'originale ma
+        // allungare di 1 elemento l'array content
+        ...currentState, // <- spread operator, crea una copia delle proprietà di currentState e le trapianta qua
+        cart: {
+          ...currentState.cart,
+          // content: currentState.cart.content.concat(action.payload), // action.payload era bookSelected
+          content: [...currentState.cart.content, action.payload],
+        },
+      }
+
+    case 'REMOVE_FROM_CART':
+      return {
+        ...currentState,
+        cart: {
+          ...currentState.cart,
+          // filter
+          content: currentState.cart.content.filter((book) => {
+            // versione lunga
+            // if (book.id !== action.payload) {
+            //   return true
+            // } else {
+            //   return false
+            // }
+            // versione pro
+            return book.id !== action.payload
+          }),
+          // spread operator (NIGHTMARE VERSION)
+          // [fetta fino all'elemento da rimuovere, fetta da elemento da rimuovere + 1]
+          //   content: [
+          //     ...currentState.cart.content.slice(
+          //       0,
+          //       currentState.cart.content.findIndex(
+          //         (b) => b.id === action.payload,
+          //       ),
+          //     ),
+          //     ...currentState.cart.content.slice(
+          //       currentState.cart.content.findIndex(
+          //         (b) => b.id === action.payload,
+          //       ) + 1,
+          //     ),
+          //   ],
+        },
+      }
 
     default:
       // se entro nel caso "default" vuol dire che non so come comportarmi
